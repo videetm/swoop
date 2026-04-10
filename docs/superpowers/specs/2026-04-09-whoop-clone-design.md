@@ -6,7 +6,7 @@
 
 ## Overview
 
-A native Swift iOS + watchOS app that reads local Apple Watch health data via HealthKit and presents it through a WHOOP-inspired interface: a daily Recovery Score as the hero metric, backed by Sleep, Strain, and HRV Trends. App name: **SWOOP**.
+A native Swift iOS + watchOS app that reads local Apple Watch health data via HealthKit. Daily Readiness Score is the hero metric, backed by Sleep, Load, and HRV Trends.
 
 **Target:** Personal use / sideloaded first. Architecture must support App Store submission as a follow-up with minimal changes.
 
@@ -18,9 +18,9 @@ Four core pillars, all sourced from HealthKit:
 
 | Pillar | Source Data | Output |
 |---|---|---|
-| **Recovery Score** | HRV (SDNN), resting HR, sleep performance | 0–100 daily readiness score |
+| **Readiness Score** | HRV (SDNN), resting HR, sleep quality | 0–100 daily readiness score |
 | **Sleep Tracking** | HKCategoryTypeIdentifierSleepAnalysis | Sleep score, stages, duration, debt |
-| **Strain / Exertion** | HKWorkoutType, heart rate samples | 0–21 cardiovascular load (TRIMP) |
+| **Daily Load** | HKWorkoutType, heart rate samples | 0–100 cardiovascular load (TRIMP) |
 | **HRV Trends** | HKQuantityTypeIdentifierHeartRateVariabilitySDNN | 30-day chart with 7-day baseline band |
 
 ---
@@ -39,11 +39,11 @@ Four core pillars, all sourced from HealthKit:
 
 ```
 Tab 1: Today
-  └── RecoveryRingView (home)
+  └── ReadinessRingView (home)
         ├── → SleepDetailView
-        ├── → StrainDetailView
+        ├── → LoadDetailView
         ├── → HRVTrendsView
-        └── → RecoveryDetailView
+        └── → ReadinessDetailView
 
 Tab 2: History
   └── HistoryView (30-day calendar + sparklines)
@@ -53,8 +53,8 @@ Tab 3: Settings
 ```
 
 **watchOS App:**
-- Complication on watch face showing recovery score
-- Glance app showing Recovery · Sleep · Strain · HRV at a glance
+- Complication on watch face showing readiness score
+- Glance app showing Readiness · Sleep · Load · HRV at a glance
 - No input on Watch — display only, synced from iPhone via WatchConnectivity
 
 ---
@@ -73,10 +73,10 @@ Tab 3: Settings
 ```swift
 @Model
 class DailySnapshot {
-    var date: Date           // normalized to midnight
-    var recoveryScore: Double  // 0–100
+    var date: Date             // normalized to midnight
+    var readinessScore: Double // 0–100
     var sleepScore: Double     // 0–100
-    var strainScore: Double    // 0–21
+    var loadScore: Double      // 0–100
     var hrv: Double            // ms (SDNN, morning measurement)
     var restingHR: Double      // bpm
     var sleepHours: Double     // total sleep time in hours
@@ -88,12 +88,12 @@ HealthKit is queried each refresh cycle; only the derived scores are persisted. 
 
 ### Score Algorithms
 
-**Recovery Score (0–100)**
+**Readiness Score (0–100)**
 ```
 hrv_component   = clamp((today_hrv / mean(last_7_days_hrv)) * 50, 0, 50)
 sleep_component = sleep_score * 0.30
 rhr_component   = clamp((1 - (today_rhr - baseline_rhr) / baseline_rhr) * 20, 0, 20)
-recovery_score  = hrv_component + sleep_component + rhr_component
+readiness_score = hrv_component + sleep_component + rhr_component
 ```
 
 **Sleep Score (0–100)**
@@ -103,14 +103,14 @@ duration_ratio  = clamp(sleep_hours / 8.0, 0, 1)
 sleep_score     = (efficiency * 0.6 + duration_ratio * 0.4) * 100
 ```
 
-**Strain Score (0–21) — TRIMP model**
+**Load Score (0–100) — TRIMP model**
 ```
 For each heart rate sample in workouts:
   zone_multiplier = { zone1: 1.0, zone2: 2.0, zone3: 3.0, zone4: 4.5, zone5: 6.0 }
   trimp += duration_in_zone_minutes * zone_multiplier
-strain_score = clamp(trimp / 300.0 * 21, 0, 21)
+load_score = clamp(trimp / 300.0 * 100, 0, 100)
 ```
-`max_trimp` is fixed at 300 (≈ 60 minutes at zone 5 intensity), giving a 21-point ceiling for extreme training days. HR zones calculated from age-estimated max HR (220 − age); user provides birthdate in Settings.
+`max_trimp` is fixed at 300 (≈ 60 minutes at zone 5 intensity). HR zones calculated from age-estimated max HR (220 − age); user provides birthdate in Settings.
 
 **HRV Baseline**
 ```
@@ -133,11 +133,11 @@ Trimming prevents single outlier nights (illness, alcohol, travel) from skewing 
 Swoop/
 ├── SwoopApp.swift
 ├── Features/
-│   ├── Home/RecoveryRingView.swift
+│   ├── Home/ReadinessRingView.swift
 │   ├── Sleep/SleepDetailView.swift
-│   ├── Strain/StrainDetailView.swift
+│   ├── Load/LoadDetailView.swift
 │   ├── HRV/HRVTrendsView.swift
-│   ├── Recovery/RecoveryDetailView.swift
+│   ├── Readiness/ReadinessDetailView.swift
 │   ├── History/HistoryView.swift
 │   └── Settings/SettingsView.swift
 ├── Models/
@@ -149,7 +149,7 @@ Swoop/
 │   └── WatchSyncService.swift
 └── SwoopWatch/
     ├── SwoopWatchApp.swift
-    ├── RecoveryGlanceView.swift
+    ├── ReadinessGlanceView.swift
     └── ComplicationProvider.swift
 ```
 
