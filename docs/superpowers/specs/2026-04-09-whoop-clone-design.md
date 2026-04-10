@@ -1,4 +1,4 @@
-# WHOOP Clone — Native Swift iOS App Design Spec
+# SWOOP — Native Swift iOS App Design Spec
 **Date:** 2026-04-09  
 **Status:** Approved
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-A native Swift iOS + watchOS app that reads local Apple Watch health data via HealthKit and presents it through a WHOOP-inspired interface: a daily Recovery Score as the hero metric, backed by Sleep, Strain, and HRV Trends.
+A native Swift iOS + watchOS app that reads local Apple Watch health data via HealthKit and presents it through a WHOOP-inspired interface: a daily Recovery Score as the hero metric, backed by Sleep, Strain, and HRV Trends. App name: **SWOOP**.
 
 **Target:** Personal use / sideloaded first. Architecture must support App Store submission as a follow-up with minimal changes.
 
@@ -130,8 +130,8 @@ Trimming prevents single outlier nights (illness, alcohol, travel) from skewing 
 ### Project Structure
 
 ```
-WhoopClone/
-├── WhoopCloneApp.swift
+Swoop/
+├── SwoopApp.swift
 ├── Features/
 │   ├── Home/RecoveryRingView.swift
 │   ├── Sleep/SleepDetailView.swift
@@ -147,8 +147,8 @@ WhoopClone/
 │   ├── ScoreEngine.swift
 │   ├── BackgroundRefreshService.swift
 │   └── WatchSyncService.swift
-└── WhoopCloneWatch/
-    ├── WhoopCloneWatchApp.swift
+└── SwoopWatch/
+    ├── SwoopWatchApp.swift
     ├── RecoveryGlanceView.swift
     └── ComplicationProvider.swift
 ```
@@ -171,7 +171,7 @@ Read:
 
 ## Background Refresh
 
-- Register `com.whoopclone.refresh` as a `BGAppRefreshTaskRequest`
+- Register `com.swoop.refresh` as a `BGAppRefreshTaskRequest`
 - Schedule for ~6am daily (after Watch overnight sync typically completes)
 - Task: query last 24h HealthKit → compute scores → write `DailySnapshot` → sync to Watch
 - Reschedule itself at end of each execution
