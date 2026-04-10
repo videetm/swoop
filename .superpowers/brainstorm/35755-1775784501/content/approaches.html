@@ -1,0 +1,42 @@
+<h2>Three architectural approaches</h2>
+<p class="subtitle">How the app computes and stores your scores under the hood</p>
+
+<div class="options">
+
+  <div class="option" data-choice="on-demand" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>On-Demand Queries</h3>
+      <p>Every time you open the app, it queries HealthKit live and computes scores on the fly. No local database. Simple, always fresh data.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>No data layer to maintain</li><li>Always reflects latest Watch sync</li><li>Minimal storage use</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Slower launch (HealthKit queries)</li><li>No offline history</li><li>Battery drain from repeated queries</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="swiftdata" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>SwiftData + Background Refresh ⭐ Recommended</h3>
+      <p>Computed scores are persisted locally in SwiftData. A background task refreshes once daily (after sleep). HealthKit is source of truth; SwiftData caches results.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>Instant app launch</li><li>Full history &amp; trend charts</li><li>Works offline</li><li>Modern Swift/iOS 17+ API</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More complex setup</li><li>Score freshness depends on background task</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="observable" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>In-Memory + UserDefaults</h3>
+      <p>Queries HealthKit on launch, keeps results in memory via @Observable. Persists only the last 30 days as JSON in UserDefaults. Simple middle ground.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>No database schema</li><li>Easy to reason about</li><li>Good for prototyping</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>UserDefaults not built for this</li><li>Limited history window</li><li>Hard to migrate later</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

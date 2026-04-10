@@ -1,0 +1,98 @@
+<h2>How should the app be navigated?</h2>
+<p class="subtitle">This shapes the entire UX flow</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="tab-bar" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#1a0533,#0d1f4a);border-radius:8px;font-family:-apple-system,sans-serif;overflow:hidden">
+      <div style="padding:16px;color:#fff">
+        <div style="color:rgba(255,255,255,0.5);font-size:9px;letter-spacing:2px;text-transform:uppercase">TODAY</div>
+        <div style="font-size:32px;font-weight:700;color:#fff">Recovery <span style="color:#a78bfa">73</span></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <div style="flex:1;background:rgba(255,255,255,0.07);border-radius:8px;padding:8px;text-align:center">
+            <div style="color:rgba(255,255,255,0.4);font-size:8px">SLEEP</div>
+            <div style="color:#60a5fa;font-weight:600;font-size:13px">87%</div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.07);border-radius:8px;padding:8px;text-align:center">
+            <div style="color:rgba(255,255,255,0.4);font-size:8px">STRAIN</div>
+            <div style="color:#f472b6;font-weight:600;font-size:13px">11.2</div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.07);border-radius:8px;padding:8px;text-align:center">
+            <div style="color:rgba(255,255,255,0.4);font-size:8px">HRV</div>
+            <div style="color:#34d399;font-weight:600;font-size:13px">68ms</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(0,0,0,0.4);display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid rgba(255,255,255,0.08)">
+        <div style="text-align:center">
+          <div style="font-size:16px">🏠</div>
+          <div style="color:#a78bfa;font-size:8px">Today</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:16px">😴</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:8px">Sleep</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:16px">⚡</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:8px">Strain</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:16px">📈</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:8px">Trends</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Tab Bar</h3>
+      <p>4 persistent tabs: Today, Sleep, Strain, Trends. Always one tap away. Standard iOS pattern, easy to navigate.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scroll-dashboard" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#1a0533,#0d1f4a);border-radius:8px;font-family:-apple-system,sans-serif;padding:16px;overflow:hidden">
+      <div style="color:rgba(255,255,255,0.5);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">WEDNESDAY</div>
+      <div style="font-size:28px;font-weight:700;color:#fff;margin-bottom:12px">Recovery <span style="color:#a78bfa">73%</span></div>
+      <div style="background:rgba(255,255,255,0.07);border-radius:10px;padding:10px;margin-bottom:8px">
+        <div style="color:rgba(255,255,255,0.4);font-size:8px;letter-spacing:1px">SLEEP PERFORMANCE</div>
+        <div style="color:#60a5fa;font-size:20px;font-weight:700">87%</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.07);border-radius:10px;padding:10px">
+        <div style="color:rgba(255,255,255,0.4);font-size:8px;letter-spacing:1px">DAILY STRAIN ↓ scroll for more</div>
+        <div style="color:#f472b6;font-size:20px;font-weight:700">11.2</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Scrollable Dashboard</h3>
+      <p>One long scrollable screen with all cards stacked. Recovery → Sleep → Strain → HRV → History. No tabs.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="ring-home" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#1a0533,#0d1f4a);border-radius:8px;font-family:-apple-system,sans-serif;padding:16px;text-align:center">
+      <div style="color:rgba(255,255,255,0.5);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">TODAY</div>
+      <div style="position:relative;width:90px;height:90px;margin:0 auto 8px">
+        <svg viewBox="0 0 90 90" style="transform:rotate(-90deg)">
+          <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(167,139,250,0.15)" stroke-width="8"/>
+          <circle cx="45" cy="45" r="38" fill="none" stroke="#a78bfa" stroke-width="8" stroke-dasharray="170 238" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:20px;font-weight:700">73</div>
+      </div>
+      <div style="color:rgba(255,255,255,0.5);font-size:9px;margin-bottom:8px">RECOVERY</div>
+      <div style="display:flex;justify-content:center;gap:16px">
+        <div style="text-align:center">
+          <div style="width:28px;height:28px;border-radius:50%;border:3px solid #60a5fa;display:flex;align-items:center;justify-content:center;color:#60a5fa;font-size:9px;font-weight:700;margin:0 auto">87</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:7px;margin-top:3px">SLEEP</div>
+        </div>
+        <div style="text-align:center">
+          <div style="width:28px;height:28px;border-radius:50%;border:3px solid #f472b6;display:flex;align-items:center;justify-content:center;color:#f472b6;font-size:9px;font-weight:700;margin:0 auto">11</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:7px;margin-top:3px">STRAIN</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Ring / Score Home</h3>
+      <p>Hero recovery ring front and center. Tap each metric to drill into its detail screen. Clean, high-impact home view.</p>
+    </div>
+  </div>
+
+</div>
