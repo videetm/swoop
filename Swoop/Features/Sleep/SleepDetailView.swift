@@ -7,21 +7,26 @@ struct SleepDetailView: View {
     let snapshot: DailySnapshot?
     @Query(sort: \DailySnapshot.date, order: .forward) private var history: [DailySnapshot]
 
-    var last14: [DailySnapshot] {
-        Array(history.suffix(14))
+    private var last14: [DailySnapshot] { Array(history.suffix(14)) }
+
+    private var insight: Insight? {
+        InsightEngine.metricInsight(metric: .sleep, snapshots: last14)
     }
 
     var body: some View {
         ZStack {
             LinearGradient.appBackground.ignoresSafeArea()
+                .ambientGlow(leading: .swoopBlue, trailing: .swoopPurple)
             ScrollView {
-                VStack(spacing: 20) {
-                    scoreHeader
-                    statsCards
+                VStack(spacing: 16) {
+                    scoreHero
+                    statsRow
                     historyChart
+                    if let insight { insightCard(insight) }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
+                .padding(.bottom, 32)
             }
         }
         .navigationTitle("Sleep")
@@ -29,56 +34,84 @@ struct SleepDetailView: View {
         .toolbarColorScheme(.dark, for: .navigationBar)
     }
 
-    private var scoreHeader: some View {
+    // MARK: - Sleep score hero
+
+    private var scoreHero: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text("SLEEP SCORE")
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundStyle(Color.swoopBlue)
                     .kerning(2)
-                Text(snapshot.map { "\(Int($0.sleepScore))" } ?? "--")
-                    .font(.system(size: 56, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text(snapshot.map { "\(Int($0.sleepScore))" } ?? "--")
+                        .font(.system(size: 64, weight: .black, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text("/ 100")
+                        .font(.title2)
+                        .foregroundStyle(.white.opacity(0.3))
+                }
+                Text(sleepLabel)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle((snapshot?.sleepScore ?? 0).scoreColor)
             }
             Spacer()
-            Image(systemName: "moon.fill")
+            Image(systemName: "moon.stars.fill")
                 .font(.system(size: 44))
-                .foregroundStyle(Color.swoopBlue.opacity(0.3))
+                .foregroundStyle(Color.swoopBlue.opacity(0.25))
         }
         .padding(20)
-        .glassCard()
+        .liquidGlass(cornerRadius: 22)
     }
 
-    private var statsCards: some View {
-        HStack(spacing: 12) {
-            statCard(label: "SLEPT", value: snapshot.map { formatHours($0.sleepHours) } ?? "--", color: .swoopBlue)
-            statCard(label: "NEED", value: formatHours(UserSettings.shared.sleepNeedHours), color: .white.opacity(0.4))
-            statCard(label: "DEBT", value: snapshot.map { formatHours($0.sleepDebt) } ?? "--", color: .swoopPink)
+    private var sleepLabel: String {
+        guard let score = snapshot?.sleepScore else { return "No data" }
+        switch score {
+        case 80...: return "Well rested"
+        case 50..<80: return "Adequate"
+        default: return "Poor sleep"
         }
     }
 
-    private func statCard(label: String, value: String, color: Color) -> some View {
+    // MARK: - Stats row
+
+    private var statsRow: some View {
+        HStack(spacing: 10) {
+            statCard("SLEPT",
+                     snapshot.map { formatHours($0.sleepHours) } ?? "--",
+                     .swoopBlue)
+            statCard("NEED",
+                     formatHours(UserSettings.shared.sleepNeedHours),
+                     .white.opacity(0.4))
+            statCard("DEBT",
+                     snapshot.map { formatHours($0.sleepDebt) } ?? "--",
+                     .swoopPink)
+        }
+    }
+
+    private func statCard(_ label: String, _ value: String, _ color: Color) -> some View {
         VStack(spacing: 6) {
             Text(value)
-                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .font(.system(size: 20, weight: .bold, design: .rounded))
                 .foregroundStyle(color)
             Text(label)
-                .font(.system(size: 9, weight: .semibold))
+                .font(.system(size: 8, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.4))
                 .kerning(1.5)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
-        .glassCard()
+        .liquidGlass(cornerRadius: 16)
     }
 
-    private var historyChart: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("14-DAY SLEEP HISTORY")
-                .font(.system(size: 10, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.5))
-                .kerning(2)
+    // MARK: - 14-day chart
 
+    private var historyChart: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("14-DAY SLEEP HISTORY")
+                .font(.system(size: 9, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.4))
+                .kerning(2)
             Chart(last14) { snap in
                 BarMark(
                     x: .value("Date", snap.date, unit: .day),
@@ -86,18 +119,17 @@ struct SleepDetailView: View {
                 )
                 .foregroundStyle(Color.swoopBlue.gradient)
                 .cornerRadius(4)
-
                 RuleMark(y: .value("Need", UserSettings.shared.sleepNeedHours))
                     .foregroundStyle(.white.opacity(0.2))
                     .lineStyle(StrokeStyle(dash: [4]))
             }
             .chartYAxis {
                 AxisMarks(values: [0, 4, 6, 8, 10]) { value in
-                    AxisGridLine().foregroundStyle(.white.opacity(0.08))
+                    AxisGridLine().foregroundStyle(.white.opacity(0.07))
                     AxisValueLabel {
                         Text("\(value.as(Int.self) ?? 0)h")
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.4))
+                            .foregroundStyle(.white.opacity(0.35))
                     }
                 }
             }
@@ -106,13 +138,41 @@ struct SleepDetailView: View {
                     AxisGridLine().foregroundStyle(.clear)
                     AxisValueLabel(format: .dateTime.day(), centered: true)
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.4))
+                        .foregroundStyle(.white.opacity(0.35))
                 }
             }
             .frame(height: 160)
         }
-        .padding(20)
-        .glassCard()
+        .padding(16)
+        .liquidGlass(cornerRadius: 18)
+    }
+
+    // MARK: - Insight card
+
+    private func insightCard(_ insight: Insight) -> some View {
+        HStack(spacing: 10) {
+            Circle().fill(insight.color).frame(width: 6, height: 6)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("INSIGHT")
+                    .font(.system(size: 8, weight: .semibold))
+                    .foregroundStyle(insight.color)
+                    .kerning(1.5)
+                Text(insight.text)
+                    .font(.system(size: 13))
+                    .foregroundStyle(.white.opacity(0.75))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(LinearGradient(
+                    colors: [insight.color.opacity(0.12), insight.color.opacity(0.04)],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ))
+                .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(insight.color.opacity(0.22), lineWidth: 1))
+        )
     }
 
     private func formatHours(_ hours: Double) -> String {
