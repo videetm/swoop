@@ -51,10 +51,10 @@ struct LoadDetailView: View {
                     .kerning(2)
                 Text(snapshot.map { "\(Int($0.loadScore))" } ?? "--")
                     .font(.system(size: 56, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                 Text("out of 100")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(.primary.opacity(0.4))
             }
             Spacer()
             Image(systemName: "bolt.fill")
@@ -69,7 +69,7 @@ struct LoadDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("HEART RATE ZONES")
                 .font(.system(size: 9, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.primary.opacity(0.4))
                 .kerning(2)
             HStack(spacing: 6) {
                 ForEach(zones, id: \.label) { zone in
@@ -79,7 +79,7 @@ struct LoadDetailView: View {
                             .foregroundStyle(zone.color)
                         Text(zone.range)
                             .font(.system(size: 7))
-                            .foregroundStyle(.white.opacity(0.4))
+                            .foregroundStyle(.primary.opacity(0.4))
                             .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity)
@@ -98,7 +98,7 @@ struct LoadDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("14-DAY LOAD HISTORY")
                 .font(.system(size: 9, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.primary.opacity(0.4))
                 .kerning(2)
             Chart(last14) { snap in
                 BarMark(
@@ -111,11 +111,11 @@ struct LoadDetailView: View {
             .chartYScale(domain: 0...100)
             .chartYAxis {
                 AxisMarks(values: [0, 25, 50, 75, 100]) { value in
-                    AxisGridLine().foregroundStyle(.white.opacity(0.07))
+                    AxisGridLine().foregroundStyle(.primary.opacity(0.07))
                     AxisValueLabel {
                         Text("\(value.as(Int.self) ?? 0)")
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.35))
+                            .foregroundStyle(.primary.opacity(0.35))
                     }
                 }
             }
@@ -124,7 +124,7 @@ struct LoadDetailView: View {
                     AxisGridLine().foregroundStyle(.clear)
                     AxisValueLabel(format: .dateTime.day(), centered: true)
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.35))
+                        .foregroundStyle(.primary.opacity(0.35))
                 }
             }
             .frame(height: 160)
@@ -138,7 +138,7 @@ struct LoadDetailView: View {
             Circle().fill(insight.color).frame(width: 6, height: 6)
             VStack(alignment: .leading, spacing: 2) {
                 Text("INSIGHT").font(.system(size: 8, weight: .semibold)).foregroundStyle(insight.color).kerning(1.5)
-                Text(insight.text).font(.system(size: 13)).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true)
+                Text(insight.text).font(.system(size: 13)).foregroundStyle(.primary.opacity(0.75)).fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
         }

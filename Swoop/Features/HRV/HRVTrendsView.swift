@@ -46,10 +46,10 @@ struct HRVTrendsView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("\(Int(baseline))")
                         .font(.system(size: 56, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                     Text("ms")
                         .font(.title2)
-                        .foregroundStyle(.white.opacity(0.4))
+                        .foregroundStyle(.primary.opacity(0.4))
                 }
             }
             Spacer()
@@ -65,7 +65,7 @@ struct HRVTrendsView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("30-DAY HRV")
                 .font(.system(size: 9, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.primary.opacity(0.4))
                 .kerning(2)
             Chart {
                 ForEach(last30) { snap in
@@ -107,20 +107,20 @@ struct HRVTrendsView: View {
             }
             .chartYAxis {
                 AxisMarks { value in
-                    AxisGridLine().foregroundStyle(.white.opacity(0.07))
+                    AxisGridLine().foregroundStyle(.primary.opacity(0.07))
                     AxisValueLabel {
                         Text("\(value.as(Int.self) ?? 0)ms")
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.35))
+                            .foregroundStyle(.primary.opacity(0.35))
                     }
                 }
             }
             .chartXAxis {
                 AxisMarks(values: .stride(by: .day, count: 7)) { _ in
-                    AxisGridLine().foregroundStyle(.white.opacity(0.07))
+                    AxisGridLine().foregroundStyle(.primary.opacity(0.07))
                     AxisValueLabel(format: .dateTime.month(.abbreviated).day(), centered: true)
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.35))
+                        .foregroundStyle(.primary.opacity(0.35))
                 }
             }
             .frame(height: 200)
@@ -134,7 +134,7 @@ struct HRVTrendsView: View {
             Circle().fill(insight.color).frame(width: 6, height: 6)
             VStack(alignment: .leading, spacing: 2) {
                 Text("INSIGHT").font(.system(size: 8, weight: .semibold)).foregroundStyle(insight.color).kerning(1.5)
-                Text(insight.text).font(.system(size: 13)).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true)
+                Text(insight.text).font(.system(size: 13)).foregroundStyle(.primary.opacity(0.75)).fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
         }

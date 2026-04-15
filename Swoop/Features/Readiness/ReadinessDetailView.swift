@@ -43,7 +43,7 @@ struct ReadinessDetailView: View {
                     .kerning(2)
                 Text(snapshot.map { "\(Int($0.readinessScore))" } ?? "--")
                     .font(.system(size: 56, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
             Spacer()
         }
@@ -90,12 +90,12 @@ struct ReadinessDetailView: View {
                     .kerning(1.5)
                 Text(description)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(.primary.opacity(0.4))
             }
             Spacer()
             Text(value)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
         }
         .padding(16)
         .liquidGlass(cornerRadius: 16)
@@ -105,7 +105,7 @@ struct ReadinessDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("7-DAY READINESS")
                 .font(.system(size: 9, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.primary.opacity(0.4))
                 .kerning(2)
             HStack(alignment: .bottom, spacing: 8) {
                 ForEach(history.suffix(7)) { snap in
@@ -118,7 +118,7 @@ struct ReadinessDetailView: View {
                             .frame(height: max(CGFloat(snap.readinessScore) / 100 * 80, 4))
                         Text(snap.date.formatted(.dateTime.weekday(.narrow)))
                             .font(.system(size: 8))
-                            .foregroundStyle(.white.opacity(0.3))
+                            .foregroundStyle(.primary.opacity(0.3))
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -134,7 +134,7 @@ struct ReadinessDetailView: View {
             Circle().fill(insight.color).frame(width: 6, height: 6)
             VStack(alignment: .leading, spacing: 2) {
                 Text("INSIGHT").font(.system(size: 8, weight: .semibold)).foregroundStyle(insight.color).kerning(1.5)
-                Text(insight.text).font(.system(size: 13)).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true)
+                Text(insight.text).font(.system(size: 13)).foregroundStyle(.primary.opacity(0.75)).fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
         }

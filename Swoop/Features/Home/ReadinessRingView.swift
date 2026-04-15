@@ -76,7 +76,7 @@ struct ReadinessRingView: View {
         HStack {
             Text(Date().formatted(.dateTime.weekday(.wide).month().day()))
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.45))
+                .foregroundStyle(.primary.opacity(0.45))
                 .textCase(.uppercase)
                 .kerning(1.5)
             Spacer()
@@ -92,14 +92,14 @@ struct ReadinessRingView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("TODAY'S SCORE")
                         .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.4))
+                        .foregroundStyle(.primary.opacity(0.4))
                         .kerning(1.5)
                     Text(readinessStatus)
                         .font(.system(size: 20, weight: .bold))
                         .foregroundStyle((snapshot?.readinessScore ?? 0).scoreColor)
                     Text("Tap for breakdown →")
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.22))
+                        .foregroundStyle(.primary.opacity(0.22))
                 }
                 Spacer()
             }
@@ -127,15 +127,15 @@ struct ReadinessRingView: View {
                 if let score = snapshot?.readinessScore {
                     Text("\(Int(score))")
                         .font(.system(size: 34, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                 } else {
                     Text("--")
                         .font(.system(size: 34, weight: .black, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.3))
+                        .foregroundStyle(.primary.opacity(0.3))
                 }
                 Text("READINESS")
                     .font(.system(size: 7, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(.primary.opacity(0.4))
                     .kerning(1.5)
             }
         }
@@ -159,7 +159,7 @@ struct ReadinessRingView: View {
                 .frame(width: 6, height: 6)
             Text(insight.text)
                 .font(.system(size: 13))
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(.primary.opacity(0.8))
                 .fixedSize(horizontal: false, vertical: true)
             Spacer()
         }
@@ -219,12 +219,12 @@ struct ReadinessRingView: View {
                     .foregroundStyle(color)
                 Text(value)
                     .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
                 Text(label)
                     .font(.system(size: 7, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.35))
+                    .foregroundStyle(.primary.opacity(0.35))
                     .kerning(1)
             }
             .frame(maxWidth: .infinity)
@@ -240,12 +240,12 @@ struct ReadinessRingView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("7-DAY TREND")
                 .font(.system(size: 9, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.primary.opacity(0.4))
                 .kerning(2)
             if last7.isEmpty {
                 Text("No history yet")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.3))
+                    .foregroundStyle(.primary.opacity(0.3))
                     .frame(height: 60)
                     .frame(maxWidth: .infinity)
             } else {
@@ -257,7 +257,7 @@ struct ReadinessRingView: View {
                                 .frame(height: max(CGFloat(snap.readinessScore) / 100 * 44, 4))
                             Text(snap.date.formatted(.dateTime.weekday(.narrow)))
                                 .font(.system(size: 8))
-                                .foregroundStyle(.white.opacity(0.3))
+                                .foregroundStyle(.primary.opacity(0.3))
                         }
                         .frame(maxWidth: .infinity)
                     }

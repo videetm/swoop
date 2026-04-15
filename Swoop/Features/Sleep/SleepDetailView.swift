@@ -46,10 +46,10 @@ struct SleepDetailView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(snapshot.map { "\(Int($0.sleepScore))" } ?? "--")
                         .font(.system(size: 64, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                     Text("/ 100")
                         .font(.title2)
-                        .foregroundStyle(.white.opacity(0.3))
+                        .foregroundStyle(.primary.opacity(0.3))
                 }
                 Text(sleepLabel)
                     .font(.system(size: 15, weight: .semibold))
@@ -96,7 +96,7 @@ struct SleepDetailView: View {
                 .foregroundStyle(color)
             Text(label)
                 .font(.system(size: 8, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.primary.opacity(0.4))
                 .kerning(1.5)
         }
         .frame(maxWidth: .infinity)
@@ -110,7 +110,7 @@ struct SleepDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("14-DAY SLEEP HISTORY")
                 .font(.system(size: 9, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.primary.opacity(0.4))
                 .kerning(2)
             Chart(last14) { snap in
                 BarMark(
@@ -120,16 +120,16 @@ struct SleepDetailView: View {
                 .foregroundStyle(Color.swoopBlue.gradient)
                 .cornerRadius(4)
                 RuleMark(y: .value("Need", UserSettings.shared.sleepNeedHours))
-                    .foregroundStyle(.white.opacity(0.2))
+                    .foregroundStyle(.primary.opacity(0.2))
                     .lineStyle(StrokeStyle(dash: [4]))
             }
             .chartYAxis {
                 AxisMarks(values: [0, 4, 6, 8, 10]) { value in
-                    AxisGridLine().foregroundStyle(.white.opacity(0.07))
+                    AxisGridLine().foregroundStyle(.primary.opacity(0.07))
                     AxisValueLabel {
                         Text("\(value.as(Int.self) ?? 0)h")
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.35))
+                            .foregroundStyle(.primary.opacity(0.35))
                     }
                 }
             }
@@ -138,7 +138,7 @@ struct SleepDetailView: View {
                     AxisGridLine().foregroundStyle(.clear)
                     AxisValueLabel(format: .dateTime.day(), centered: true)
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.35))
+                        .foregroundStyle(.primary.opacity(0.35))
                 }
             }
             .frame(height: 160)
@@ -159,7 +159,7 @@ struct SleepDetailView: View {
                     .kerning(1.5)
                 Text(insight.text)
                     .font(.system(size: 13))
-                    .foregroundStyle(.white.opacity(0.75))
+                    .foregroundStyle(.primary.opacity(0.75))
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer()

@@ -67,7 +67,7 @@ struct HistoryView: View {
                             RoundedRectangle(cornerRadius: 9)
                                 .fill(period == p ? Color.swoopPurple.opacity(0.25) : Color.clear)
                         )
-                        .foregroundStyle(period == p ? Color.swoopPurple : Color.white.opacity(0.4))
+                        .foregroundStyle(period == p ? Color.swoopPurple : Color.primary.opacity(0.4))
                 }
                 .buttonStyle(.plain)
             }
@@ -75,8 +75,8 @@ struct HistoryView: View {
         .padding(4)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.05))
-                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.white.opacity(0.08), lineWidth: 1))
+                .fill(Color.primary.opacity(0.05))
+                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.primary.opacity(0.08), lineWidth: 1))
         )
     }
 
@@ -92,10 +92,10 @@ struct HistoryView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(metric.label)
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.45))
+                    .foregroundStyle(.primary.opacity(0.45))
                 Text(metric.formattedValue(currentValue(for: metric)))
                     .font(.system(size: 20, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
 
             Spacer()
@@ -105,7 +105,7 @@ struct HistoryView: View {
 
             Image(systemName: "chevron.right")
                 .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.2))
+                .foregroundStyle(.primary.opacity(0.2))
         }
         .padding(16)
         .liquidGlass(cornerRadius: 18)
@@ -163,10 +163,10 @@ struct HistoryView: View {
                 .foregroundStyle(Color.swoopPurple.opacity(0.4))
             Text("No history yet")
                 .font(.title3.bold())
-                .foregroundStyle(.white.opacity(0.6))
+                .foregroundStyle(.primary.opacity(0.6))
             Text("Data will appear here after your first refresh.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.3))
+                .foregroundStyle(.primary.opacity(0.3))
                 .multilineTextAlignment(.center)
         }
     }

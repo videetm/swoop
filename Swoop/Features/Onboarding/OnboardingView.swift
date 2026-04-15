@@ -20,7 +20,7 @@ struct OnboardingView: View {
 
                     Text("Your body. Your data.")
                         .font(.title3)
-                        .foregroundStyle(.white.opacity(0.6))
+                        .foregroundStyle(.primary.opacity(0.6))
                 }
 
                 VStack(spacing: 16) {
@@ -57,7 +57,7 @@ struct OnboardingView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.swoopPurple)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
                 .disabled(isRequesting)
@@ -75,8 +75,8 @@ struct OnboardingView: View {
                 .frame(width: 36)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.headline).foregroundStyle(.white)
-                Text(description).font(.caption).foregroundStyle(.white.opacity(0.5))
+                Text(title).font(.headline).foregroundStyle(.primary)
+                Text(description).font(.caption).foregroundStyle(.primary.opacity(0.5))
             }
             Spacer()
         }

@@ -80,11 +80,11 @@ struct MetricDetailView: View {
                     .kerning(2)
                 Text(metric.formattedValue(currentVal))
                     .font(.system(size: 48, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                 HStack(spacing: 8) {
                     Text("Avg \(metric.formattedValue(avg))")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.4))
+                        .foregroundStyle(.primary.opacity(0.4))
                     deltaChip
                 }
             }
@@ -121,7 +121,7 @@ struct MetricDetailView: View {
                             RoundedRectangle(cornerRadius: 9)
                                 .fill(period == p ? metric.color.opacity(0.22) : Color.clear)
                         )
-                        .foregroundStyle(period == p ? metric.color : Color.white.opacity(0.4))
+                        .foregroundStyle(period == p ? metric.color : Color.primary.opacity(0.4))
                 }
                 .buttonStyle(.plain)
             }
@@ -129,8 +129,8 @@ struct MetricDetailView: View {
         .padding(4)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.05))
-                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.white.opacity(0.08), lineWidth: 1))
+                .fill(Color.primary.opacity(0.05))
+                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.primary.opacity(0.08), lineWidth: 1))
         )
     }
 
@@ -141,7 +141,7 @@ struct MetricDetailView: View {
             if periodSnapshots.isEmpty {
                 Text("No data for this period")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.3))
+                    .foregroundStyle(.primary.opacity(0.3))
                     .frame(height: 160)
                     .frame(maxWidth: .infinity)
             } else {
@@ -186,18 +186,18 @@ struct MetricDetailView: View {
                 }
                 .chartYAxis {
                     AxisMarks { value in
-                        AxisGridLine().foregroundStyle(.white.opacity(0.07))
+                        AxisGridLine().foregroundStyle(.primary.opacity(0.07))
                         AxisValueLabel()
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.35))
+                            .foregroundStyle(.primary.opacity(0.35))
                     }
                 }
                 .chartXAxis {
                     AxisMarks(values: xAxisStride) { _ in
-                        AxisGridLine().foregroundStyle(.white.opacity(0.07))
+                        AxisGridLine().foregroundStyle(.primary.opacity(0.07))
                         AxisValueLabel(format: xAxisFormat, centered: true)
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.35))
+                            .foregroundStyle(.primary.opacity(0.35))
                     }
                 }
                 .frame(height: 160)
@@ -244,7 +244,7 @@ struct MetricDetailView: View {
                 .foregroundStyle(color)
             Text(label)
                 .font(.system(size: 7, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.3))
+                .foregroundStyle(.primary.opacity(0.3))
                 .kerning(1)
         }
         .frame(maxWidth: .infinity)
@@ -264,7 +264,7 @@ struct MetricDetailView: View {
                     .kerning(1.5)
                 Text(insight.text)
                     .font(.system(size: 13))
-                    .foregroundStyle(.white.opacity(0.75))
+                    .foregroundStyle(.primary.opacity(0.75))
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer()

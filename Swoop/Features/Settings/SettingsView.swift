@@ -68,7 +68,7 @@ struct SettingsView: View {
         Section("Health Profile") {
             HStack {
                 Label("Sleep Need", systemImage: "moon.fill")
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                 Spacer()
                 Stepper(
                     value: $sleepNeed, in: 6.0...10.0, step: 0.5
@@ -80,7 +80,7 @@ struct SettingsView: View {
             }
             HStack {
                 Label("Max Heart Rate", systemImage: "heart.fill")
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                 Spacer()
                 Stepper(
                     value: $maxHROverride, in: 160...210, step: 1
@@ -97,7 +97,7 @@ struct SettingsView: View {
     private var notificationsSection: some View {
         Section("Notifications") {
             Toggle("Daily Readiness Reminder", isOn: $notificationsEnabled)
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             if notificationsEnabled {
                 DatePicker(
                     "Reminder Time",
@@ -117,7 +117,7 @@ struct SettingsView: View {
                     ),
                     displayedComponents: .hourAndMinute
                 )
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             }
         }
         .listRowBackground(Color.cardSurface)
@@ -132,7 +132,7 @@ struct SettingsView: View {
                     Spacer()
                     if isRefreshing { ProgressView().tint(.white) }
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             }
             Button(action: triggerBackfill) {
                 HStack {
@@ -141,7 +141,7 @@ struct SettingsView: View {
                     Spacer()
                     if isBackfilling { ProgressView().tint(.white) }
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             }
             .disabled(isBackfilling)
             Button(role: .destructive) {
@@ -156,10 +156,10 @@ struct SettingsView: View {
     private var aboutSection: some View {
         Section("About") {
             HStack {
-                Text("Version").foregroundStyle(.white)
+                Text("Version").foregroundStyle(.primary)
                 Spacer()
                 Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(.primary.opacity(0.4))
             }
         }
         .listRowBackground(Color.cardSurface)
