@@ -5,11 +5,16 @@ struct ContentView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \DailySnapshot.date, order: .reverse) private var snapshots: [DailySnapshot]
+    @AppStorage("appearanceMode") private var appearanceModeRaw: String = AppearanceMode.system.rawValue
 
     @State private var hasPermission = false
     @State private var isRefreshing = false
 
     var today: DailySnapshot? { snapshots.first }
+
+    private var colorScheme: ColorScheme? {
+        AppearanceMode(rawValue: appearanceModeRaw)?.colorScheme
+    }
 
     var body: some View {
         Group {
@@ -22,6 +27,7 @@ struct ContentView: View {
                 })
             }
         }
+        .preferredColorScheme(colorScheme)
         .task {
             let hk = HealthKitService()
             do {
@@ -42,12 +48,11 @@ struct ContentView: View {
                 .tabItem { Label("Today", systemImage: "circle.fill") }
 
             HistoryView()
-                .tabItem { Label("History", systemImage: "chart.line.uptrend.xyaxis") }
+                .tabItem { Label("Trends", systemImage: "chart.line.uptrend.xyaxis") }
 
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape") }
         }
-        .background(LinearGradient.appBackground.ignoresSafeArea())
         .tint(Color.swoopPurple)
     }
 
