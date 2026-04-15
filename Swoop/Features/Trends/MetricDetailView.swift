@@ -49,7 +49,7 @@ struct MetricDetailView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient.appBackground.ignoresSafeArea()
+            AppBackground()
                 .ambientGlow(leading: metric.color, trailing: .swoopBlue)
             ScrollView {
                 VStack(spacing: 12) {

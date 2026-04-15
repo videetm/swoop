@@ -23,7 +23,7 @@ struct ReadinessRingView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient.appBackground.ignoresSafeArea()
+                AppBackground()
                     .ambientGlow()
                 ScrollView {
                     VStack(spacing: 16) {

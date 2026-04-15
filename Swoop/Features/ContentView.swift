@@ -5,16 +5,11 @@ struct ContentView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \DailySnapshot.date, order: .reverse) private var snapshots: [DailySnapshot]
-    @AppStorage("appearanceMode") private var appearanceModeRaw: String = AppearanceMode.system.rawValue
 
     @State private var hasPermission = false
     @State private var isRefreshing = false
 
     var today: DailySnapshot? { snapshots.first }
-
-    private var colorScheme: ColorScheme? {
-        AppearanceMode(rawValue: appearanceModeRaw)?.colorScheme
-    }
 
     var body: some View {
         Group {
@@ -27,7 +22,6 @@ struct ContentView: View {
                 })
             }
         }
-        .preferredColorScheme(colorScheme)
         .task {
             let hk = HealthKitService()
             do {
@@ -38,7 +32,6 @@ struct ContentView: View {
             }
             if hasPermission {
                 if snapshots.isEmpty {
-                    // First launch — backfill 90 days then refresh today
                     await BackgroundRefreshService.backfill(
                         container: modelContext.container,
                         daysBack: 90

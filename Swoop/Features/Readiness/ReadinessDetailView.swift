@@ -15,7 +15,7 @@ struct ReadinessDetailView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient.appBackground.ignoresSafeArea()
+            AppBackground()
                 .ambientGlow()
             ScrollView {
                 VStack(spacing: 16) {

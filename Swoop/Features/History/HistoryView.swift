@@ -21,7 +21,7 @@ struct HistoryView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient.appBackground.ignoresSafeArea()
+                AppBackground()
                     .ambientGlow(leading: .swoopBlue, trailing: .swoopPurple)
                 if snapshots.isEmpty {
                     emptyState

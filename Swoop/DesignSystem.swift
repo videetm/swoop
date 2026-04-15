@@ -147,6 +147,33 @@ extension View {
     }
 }
 
+// MARK: - Adaptive app background
+
+/// Color-scheme-aware background view. Use instead of LinearGradient.appBackground.ignoresSafeArea()
+/// so that light-mode selections in Settings produce a visually distinct result.
+struct AppBackground: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        Group {
+            if colorScheme == .dark {
+                LinearGradient(
+                    colors: [.bgStart, .bgEnd],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            } else {
+                LinearGradient(
+                    colors: [Color(hex: "#f5f0ff"), Color(hex: "#edf2ff")],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        }
+        .ignoresSafeArea()
+    }
+}
+
 // MARK: - Score color
 
 extension Double {

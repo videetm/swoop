@@ -8,7 +8,7 @@ struct OnboardingView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient.appBackground.ignoresSafeArea()
+            AppBackground()
 
             VStack(spacing: 32) {
                 Spacer()

@@ -15,7 +15,7 @@ struct SleepDetailView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient.appBackground.ignoresSafeArea()
+            AppBackground()
                 .ambientGlow(leading: .swoopBlue, trailing: .swoopPurple)
             ScrollView {
                 VStack(spacing: 16) {

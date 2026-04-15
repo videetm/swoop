@@ -20,7 +20,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient.appBackground.ignoresSafeArea()
+                AppBackground()
                 Form {
                     appearanceSection
                     healthSection

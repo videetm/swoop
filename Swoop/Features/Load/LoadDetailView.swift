@@ -23,7 +23,7 @@ struct LoadDetailView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient.appBackground.ignoresSafeArea()
+            AppBackground()
                 .ambientGlow(leading: .swoopPink, trailing: .swoopPurple)
             ScrollView {
                 VStack(spacing: 16) {
