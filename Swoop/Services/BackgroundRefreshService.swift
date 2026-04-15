@@ -50,6 +50,22 @@ final class BackgroundRefreshService {
         }
     }
 
+    /// Backfills up to `daysBack` days of missing history. Safe to call repeatedly — skips
+    /// days that already have a snapshot. Call once after first permission grant.
+    @MainActor
+    static func backfill(container: ModelContainer, daysBack: Int = 90) async {
+        let context = container.mainContext
+        for offset in stride(from: daysBack, through: 1, by: -1) {
+            let date = Calendar.current.date(byAdding: .day, value: -offset, to: Date()) ?? Date()
+            let day = Calendar.current.startOfDay(for: date)
+            let descriptor = FetchDescriptor<DailySnapshot>(
+                predicate: #Predicate { $0.date == day }
+            )
+            if (try? context.fetch(descriptor).first) != nil { continue }
+            try? await refresh(container: container, date: date)
+        }
+    }
+
     // Also called on foreground launch as fallback
     @MainActor
     static func refresh(container: ModelContainer, date: Date) async throws {

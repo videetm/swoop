@@ -15,6 +15,7 @@ struct SettingsView: View {
 
     @State private var showClearConfirm = false
     @State private var isRefreshing = false
+    @State private var isBackfilling = false
 
     var body: some View {
         NavigationStack {
@@ -129,6 +130,16 @@ struct SettingsView: View {
                 }
                 .foregroundStyle(.white)
             }
+            Button(action: triggerBackfill) {
+                HStack {
+                    Label(isBackfilling ? "Importing history…" : "Import Full History",
+                          systemImage: "clock.arrow.circlepath")
+                    Spacer()
+                    if isBackfilling { ProgressView().tint(.white) }
+                }
+                .foregroundStyle(.white)
+            }
+            .disabled(isBackfilling)
             Button(role: .destructive) {
                 showClearConfirm = true
             } label: {
@@ -161,6 +172,18 @@ struct SettingsView: View {
                 date: Date()
             )
             isRefreshing = false
+        }
+    }
+
+    private func triggerBackfill() {
+        guard !isBackfilling else { return }
+        isBackfilling = true
+        Task {
+            await BackgroundRefreshService.backfill(
+                container: modelContext.container,
+                daysBack: 90
+            )
+            isBackfilling = false
         }
     }
 

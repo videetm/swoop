@@ -36,7 +36,14 @@ struct ContentView: View {
             } catch {
                 hasPermission = false
             }
-            if hasPermission && today == nil {
+            if hasPermission {
+                if snapshots.isEmpty {
+                    // First launch — backfill 90 days then refresh today
+                    await BackgroundRefreshService.backfill(
+                        container: modelContext.container,
+                        daysBack: 90
+                    )
+                }
                 triggerRefresh()
             }
         }
