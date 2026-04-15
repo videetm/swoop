@@ -43,14 +43,18 @@ struct SettingsView: View {
         }
     }
 
+    private var appearanceModeBinding: Binding<AppearanceMode> {
+        Binding<AppearanceMode>(
+            get: { AppearanceMode(rawValue: appearanceModeRaw) ?? .system },
+            set: { appearanceModeRaw = $0.rawValue }
+        )
+    }
+
     // MARK: - Sections
 
     private var appearanceSection: some View {
         Section("Appearance") {
-            Picker("Mode", selection: Binding(
-                get: { AppearanceMode(rawValue: appearanceModeRaw) ?? .system },
-                set: { appearanceModeRaw = $0.rawValue }
-            )) {
+            Picker("Mode", selection: appearanceModeBinding) {
                 ForEach(AppearanceMode.allCases, id: \.rawValue) { mode in
                     Text(mode.label).tag(mode)
                 }

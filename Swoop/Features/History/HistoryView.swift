@@ -30,9 +30,7 @@ struct HistoryView: View {
                         VStack(spacing: 12) {
                             periodSelector
                             ForEach(TrendMetric.allCases) { metric in
-                                NavigationLink(
-                                    destination: MetricDetailView(metric: metric, initialPeriod: period)
-                                ) {
+                                NavigationLink(value: metric) {
                                     metricCard(metric)
                                 }
                                 .buttonStyle(.plain)
@@ -47,6 +45,9 @@ struct HistoryView: View {
             .navigationTitle("Trends")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
+            .navigationDestination(for: TrendMetric.self) { metric in
+                MetricDetailView(metric: metric, initialPeriod: period)
+            }
         }
     }
 

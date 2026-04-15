@@ -38,7 +38,7 @@ enum TrendPeriod: String, CaseIterable {
 
 // MARK: - TrendMetric
 
-enum TrendMetric: String, CaseIterable, Identifiable {
+enum TrendMetric: String, CaseIterable, Identifiable, Hashable {
     case readiness, hrv, sleep, load
 
     var id: String { rawValue }
