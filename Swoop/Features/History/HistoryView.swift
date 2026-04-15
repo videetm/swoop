@@ -3,84 +3,157 @@ import SwiftData
 
 struct HistoryView: View {
 
-    @Query(sort: \DailySnapshot.date, order: .reverse) private var snapshots: [DailySnapshot]
+    @Query(sort: \DailySnapshot.date, order: .forward) private var snapshots: [DailySnapshot]
+    @State private var period: TrendPeriod = .week
+
+    private var periodSnapshots: [DailySnapshot] {
+        guard period != .day else { return Array(snapshots.suffix(1)) }
+        let cutoff = Calendar.current.date(byAdding: .day, value: -period.days, to: Date()) ?? Date()
+        return snapshots.filter { $0.date >= cutoff }
+    }
+
+    private var previousPeriodSnapshots: [DailySnapshot] {
+        let end   = Calendar.current.date(byAdding: .day, value: -period.days,     to: Date()) ?? Date()
+        let start = Calendar.current.date(byAdding: .day, value: -period.days * 2, to: Date()) ?? Date()
+        return snapshots.filter { $0.date >= start && $0.date < end }
+    }
 
     var body: some View {
         NavigationStack {
             ZStack {
                 LinearGradient.appBackground.ignoresSafeArea()
+                    .ambientGlow(leading: .swoopBlue, trailing: .swoopPurple)
                 if snapshots.isEmpty {
                     emptyState
                 } else {
-                    list
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            periodSelector
+                            ForEach(TrendMetric.allCases) { metric in
+                                NavigationLink(
+                                    destination: MetricDetailView(metric: metric, initialPeriod: period)
+                                ) {
+                                    metricCard(metric)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 8)
+                        .padding(.bottom, 32)
+                    }
                 }
             }
-            .navigationTitle("History")
+            .navigationTitle("Trends")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
         }
     }
 
-    private var list: some View {
-        List {
-            ForEach(snapshots) { snap in
-                historyRow(snap)
-                    .listRowBackground(Color.cardSurface)
-                    .listRowSeparatorTint(Color.cardBorder)
+    // MARK: - Period selector
+
+    private var periodSelector: some View {
+        HStack(spacing: 3) {
+            ForEach(TrendPeriod.allCases, id: \.rawValue) { p in
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { period = p }
+                } label: {
+                    Text(p.rawValue)
+                        .font(.system(size: 14, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 9)
+                                .fill(period == p ? Color.swoopPurple.opacity(0.25) : Color.clear)
+                        )
+                        .foregroundStyle(period == p ? Color.swoopPurple : Color.white.opacity(0.4))
+                }
+                .buttonStyle(.plain)
             }
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
+        .padding(4)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.white.opacity(0.05))
+                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.white.opacity(0.08), lineWidth: 1))
+        )
     }
 
-    private func historyRow(_ snap: DailySnapshot) -> some View {
-        HStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(snap.date.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))
-                    .font(.system(size: 13, weight: .semibold))
+    // MARK: - Metric card
+
+    private func metricCard(_ metric: TrendMetric) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: metric.icon)
+                .font(.system(size: 16))
+                .foregroundStyle(metric.color)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(metric.label)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.45))
+                Text(metric.formattedValue(currentValue(for: metric)))
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
-                Text(readinessLabel(snap.readinessScore))
-                    .font(.caption)
-                    .foregroundStyle(snap.readinessScore.scoreColor)
             }
 
             Spacer()
 
-            sparkline(values: [snap.sleepScore, snap.loadScore, snap.readinessScore],
-                      colors: [.swoopBlue, .swoopPink, .swoopPurple])
+            miniSparkline(for: metric)
+            deltaBadge(for: metric)
 
-            VStack(alignment: .trailing, spacing: 1) {
-                Text("\(Int(snap.readinessScore))")
-                    .font(.system(size: 24, weight: .black, design: .rounded))
-                    .foregroundStyle(snap.readinessScore.scoreColor)
-                Text("readiness")
-                    .font(.system(size: 8))
-                    .foregroundStyle(.white.opacity(0.3))
+            Image(systemName: "chevron.right")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.2))
+        }
+        .padding(16)
+        .liquidGlass(cornerRadius: 18)
+    }
+
+    private func miniSparkline(for metric: TrendMetric) -> some View {
+        let vals = periodSnapshots.suffix(7).map { metric.value(from: $0) }
+        let maxV = vals.max() ?? 1
+        return HStack(alignment: .bottom, spacing: 3) {
+            ForEach(Array(vals.enumerated()), id: \.offset) { i, v in
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(metric.color.opacity(i == vals.count - 1 ? 1.0 : 0.4))
+                    .frame(width: 5, height: max(CGFloat(v / maxV) * 24, 2))
             }
         }
-        .padding(.vertical, 8)
+        .frame(width: 50, height: 24)
     }
 
-    private func sparkline(values: [Double], colors: [Color]) -> some View {
-        HStack(spacing: 4) {
-            ForEach(Array(zip(values, colors)), id: \.0) { value, color in
-                VStack(spacing: 2) {
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(color.gradient)
-                        .frame(width: 6, height: max(CGFloat(value) / 100 * 28, 2))
-                }
-            }
-        }
-        .frame(height: 32)
+    private func deltaBadge(for metric: TrendMetric) -> some View {
+        let cur  = currentValue(for: metric)
+        let prev = previousValue(for: metric)
+        let pct  = prev > 0 ? (cur - prev) / prev * 100 : 0
+        let pos  = pct >= 0
+        let color: Color = pos ? .swoopGreen : .swoopPink
+
+        return Text("\(pos ? "↑" : "↓")\(Int(abs(pct)))%")
+            .font(.system(size: 10, weight: .bold))
+            .foregroundStyle(color)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
+            .background(RoundedRectangle(cornerRadius: 6).fill(color.opacity(0.15)))
     }
 
-    private func readinessLabel(_ score: Double) -> String {
-        switch score {
-        case 67...: return "Ready"
-        case 34..<67: return "Moderate"
-        default: return "Recovery needed"
-        }
+    // MARK: - Helpers
+
+    private func currentValue(for metric: TrendMetric) -> Double {
+        guard !periodSnapshots.isEmpty else { return 0 }
+        let vals = periodSnapshots.map { metric.value(from: $0) }
+        return metric == .sleep
+            ? vals.reduce(0, +) / Double(vals.count)
+            : (periodSnapshots.last.map { metric.value(from: $0) } ?? 0)
     }
+
+    private func previousValue(for metric: TrendMetric) -> Double {
+        guard !previousPeriodSnapshots.isEmpty else { return 0 }
+        return metric.value(from: previousPeriodSnapshots.last ?? previousPeriodSnapshots[0])
+    }
+
+    // MARK: - Empty state
 
     private var emptyState: some View {
         VStack(spacing: 12) {
