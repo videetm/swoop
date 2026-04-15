@@ -90,6 +90,6 @@ final class InsightEngineTests: XCTestCase {
     func testLoadMetricHighLoad() {
         let insight = InsightEngine.metricInsightCore(metric: .load, avgValue: 85, currentLoad: 90, avgLoad: 50)
         XCTAssertNotNil(insight)
-        XCTAssertTrue(insight!.text.contains("load") || insight!.text.contains("recovery"))
+        XCTAssertTrue(insight!.text.lowercased().contains("load") || insight!.text.contains("recovery"))
     }
 }

@@ -74,13 +74,14 @@ final class ScoreEngineTests: XCTestCase {
     }
 
     func testTrimpPointsFromSamples() {
-        // 30 min zone 2 (×2.0) + 15 min zone 4 (×4.5) = 60 + 67.5 = 127.5
+        // 130/180 = 72.2% → zone 3 (×3.0); 153/180 = 85% → zone 4 (×4.5)
+        // 30 min × 3.0 + 15 min × 4.5 = 90 + 67.5 = 157.5
         let samples: [(hr: Double, durationMinutes: Double)] = [
-            (hr: 130, durationMinutes: 30), // zone 2 at maxHR=180
+            (hr: 130, durationMinutes: 30), // zone 3 at maxHR=180
             (hr: 153, durationMinutes: 15), // zone 4 at maxHR=180
         ]
         let trimp = ScoreEngine.trimpPoints(heartRateSamples: samples, maxHR: 180)
-        XCTAssertEqual(trimp, 127.5, accuracy: 0.1)
+        XCTAssertEqual(trimp, 157.5, accuracy: 0.1)
     }
 
     // MARK: - Readiness Score
