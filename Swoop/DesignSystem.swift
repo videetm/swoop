@@ -33,7 +33,69 @@ extension LinearGradient {
     )
 }
 
-// MARK: - View modifiers
+// MARK: - Appearance Mode
+
+enum AppearanceMode: String, CaseIterable {
+    case system = "system"
+    case light  = "light"
+    case dark   = "dark"
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light:  return .light
+        case .dark:   return .dark
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .system: return "System"
+        case .light:  return "Light"
+        case .dark:   return "Dark"
+        }
+    }
+}
+
+// MARK: - LiquidGlass (replaces GlassCard)
+
+struct LiquidGlass: ViewModifier {
+    var cornerRadius: CGFloat = 20
+    @Environment(\.colorScheme) private var colorScheme
+
+    func body(content: Content) -> some View {
+        content
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(colorScheme == .dark
+                          ? Color.white.opacity(0.07)
+                          : Color.black.opacity(0.04))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .strokeBorder(
+                                LinearGradient(
+                                    colors: [
+                                        Color.white.opacity(colorScheme == .dark ? 0.18 : 0.5),
+                                        Color.white.opacity(colorScheme == .dark ? 0.04 : 0.1)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 1
+                            )
+                    )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+    }
+}
+
+extension View {
+    func liquidGlass(cornerRadius: CGFloat = 20) -> some View {
+        modifier(LiquidGlass(cornerRadius: cornerRadius))
+    }
+}
+
+// MARK: - GlassCard (kept for legacy detail views during polish pass)
 
 struct GlassCard: ViewModifier {
     func body(content: Content) -> some View {
@@ -50,10 +112,44 @@ extension View {
     }
 }
 
+// MARK: - Ambient Glow
+
+struct AmbientGlow: ViewModifier {
+    var leadingColor: Color = .swoopPurple
+    var trailingColor: Color = .swoopBlue
+
+    func body(content: Content) -> some View {
+        content
+            .background(
+                GeometryReader { geo in
+                    ZStack {
+                        Circle()
+                            .fill(leadingColor.opacity(0.18))
+                            .frame(width: 220, height: 220)
+                            .blur(radius: 70)
+                            .offset(x: geo.size.width - 80, y: -60)
+                        Circle()
+                            .fill(trailingColor.opacity(0.12))
+                            .frame(width: 200, height: 200)
+                            .blur(radius: 70)
+                            .offset(x: -40, y: geo.size.height * 0.55)
+                    }
+                }
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+            )
+    }
+}
+
+extension View {
+    func ambientGlow(leading: Color = .swoopPurple, trailing: Color = .swoopBlue) -> some View {
+        modifier(AmbientGlow(leadingColor: leading, trailingColor: trailing))
+    }
+}
+
 // MARK: - Score color
 
 extension Double {
-    /// Returns a color representing the score tier (0–100)
     var scoreColor: Color {
         switch self {
         case 67...: return .swoopGreen
